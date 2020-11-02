@@ -1,0 +1,3 @@
+node_modules
+dist
+rfid_uart_esp01/data/public
