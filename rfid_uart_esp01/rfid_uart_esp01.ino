@@ -6,8 +6,8 @@
 using namespace TagManager;
 
 // Replace with your network credentials
-const char* ssid     = "Lucas";
-const char* password = "982198151";
+const char* ssid     = "SSID";
+const char* password = "PASS";
 ESP8266WebServer server(80);
 
 unsigned long antes = 0;
