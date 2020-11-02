@@ -4,7 +4,7 @@
   "description": "Interface for esp8266 access control",
   "main": "index.js",
   "scripts": {
-    "test": "webpack serve --mode development",
+    "test": "webpack serve --mode development && cp ./public/index.html rfid_uart_esp01/data/public/index.html",
     "build": "webpack --mode production"
   },
   "author": "Lucas Inácio Viegas",
