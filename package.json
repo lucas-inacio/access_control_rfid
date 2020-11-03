@@ -21,9 +21,11 @@
     "webpack-cli": "^4.1.0"
   },
   "dependencies": {
+    "bootstrap": "^4.5.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
+    "reactstrap": "^8.7.0",
     "webpack-dev-server": "^3.11.0"
   }
 }

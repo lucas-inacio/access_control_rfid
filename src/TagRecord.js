@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, Card, CardBody, CardText, Input, InputGroup, InputGroupAddon, Row } from 'reactstrap';
 
 class TagRecord extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class TagRecord extends Component {
             owner: ''
         }
 
-        this.rerenderTarget = props.rerenderTarget;
+        this.updateList = props.updateList;
 
         if (props.record.indexOf(',') >= 0) {
             let tmp = props.record.split(',');
@@ -24,12 +25,18 @@ class TagRecord extends Component {
     }
 
     onApprove() {
+        let name = document.getElementById(this.state.code).value;
+        if (!name) {
+            alert('Escreva um nome para a tag');
+            return;
+        }
+        
         let msg = this.state.code.substring(0);
         msg += ',' + document.getElementById(this.state.code).value;
         fetch('/addTag', { method: 'POST', body: msg })
             .then(response => response.text())
             .then(response => {
-                document.location.reload();
+                this.updateList();
             });
     }
 
@@ -38,20 +45,29 @@ class TagRecord extends Component {
         fetch(targetURL, { method: 'POST', body: this.state.code })
             .then(response => response.text())
             .then(response => {
-                document.location.reload();
+                this.updateList();
             });
     }
 
     render() {
         return (
-            <li>
-                <div className="record">
-                    <label>{ this.state.record }</label>
-                    { (!this.state.owner) ? <button onClick={ () => this.onApprove() }>Autorizar</button> : null }
-                    <button onClick={ () => this.onRemove() }>Remover</button>
-                    { (!this.state.owner) ? <input type="text" id={ this.state.code } /> : null }
-                </div>
-            </li>
+            <Row>
+                <Card body className="record">
+                    <CardText>{ this.state.record }</CardText>
+                    <CardBody>
+                        { 
+                            (!this.state.owner) ?
+                            <InputGroup>
+                                <Input id={this.state.code} />
+                                <InputGroupAddon addonType="append">
+                                    <Button color="success" onClick={ () => this.onApprove() }>Autorizar</Button>
+                                    <Button color="danger" onClick={ () => this.onRemove() }>Remover</Button>
+                                </InputGroupAddon>
+                            </InputGroup> : <Button color="danger" onClick={ () => this.onRemove() }>Remover</Button>
+                        }
+                    </CardBody>
+                </Card>
+            </Row>
         );
     }
 }
