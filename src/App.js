@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import {
-    Route,
+    BrowserRouter,
     NavLink,
-    BrowserRouter
+    Route,
+    Switch
 } from 'react-router-dom';
 
 import { Collapse, Nav, Navbar, NavbarBrand, NavItem, NavbarToggler } from 'reactstrap';
 
 
-import Home from './Home';
-import Approved from './Approved';
-import Pending from './Pending';
+const Home = lazy(() => import('./Home'));
+const Approved = lazy(() => import('./Approved'));
+const Pending = lazy(() => import('./Pending'));
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -42,9 +43,13 @@ class App extends Component {
                         </Collapse>
                     </Navbar>
                     <div id="content">
-                        <Route exact path="/" component={Home}/>
-                        <Route path="/approved" component={Approved}/>
-                        <Route path="/pending" component={Pending}/>
+                        <Suspense fallback={<div>Carregando...</div>}>
+                            <Switch>
+                                <Route exact path="/" component={Home}/>
+                                <Route path="/approved" component={Approved}/>
+                                <Route path="/pending" component={Pending}/>
+                            </Switch>
+                        </Suspense>
                     </div>
                 </div>
             </BrowserRouter>
