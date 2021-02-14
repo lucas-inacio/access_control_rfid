@@ -66,17 +66,12 @@ void loop(){
   }
 }
 
+// TODO: usar ESPAsyncWebServer
 void handleRequest() {
   String path = server.uri();
   if (path.indexOf('.') < 0) path = "/public/index.html";
   
-  if (SPIFFS.exists(path)) {
-    File file = SPIFFS.open(path, "r");
-    server.streamFile(file, "text/html");
-    file.close();
-  } else {
-    server.send(404, "text/plain", "Sem sorte!");
-  }
+  sendFile(server, path);
 }
 
 void handleAddTag() {
@@ -118,11 +113,11 @@ void handlePending() {
   sendFile(server, PENDING_FILE_PATH);
 }
 
-void sendFile(ESP8266WebServer& server, const char* path) {
+void sendFile(ESP8266WebServer& server, String path) {
   if (SPIFFS.exists(path)) {
     File file = SPIFFS.open(path, "r");
     if (file) {
-      server.streamFile(file, "text/plain");
+      server.streamFile(file, getContentType(path));
     } else {
       server.send(404, "Not found!");
     }
@@ -134,4 +129,12 @@ void bytesToHexString(const byte* values, int len, char* outBuffer) {
   for (int i = 0, j = 0; i < len; ++i,  j += 2) {
    sprintf(&outBuffer[j], "%02x", values[i]);
   }
+}
+
+String getContentType(String path) {
+  if (path.endsWith(".css")) return "text/css";
+  if (path.endsWith(".js")) return "application/javascript";
+  if (path.endsWith(".html")) return "text/html";
+  if (path.endsWith(".ico")) return "image/x-icon";
+  return "text/plain";
 }
