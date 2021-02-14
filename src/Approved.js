@@ -8,6 +8,11 @@ class Approved extends Component {
         this.state = { approvedList : [] };
 
         this.updateList();
+        this.pollingId = setInterval(() => this.updateList(), 10000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.pollingId);
     }
 
     updateList() {

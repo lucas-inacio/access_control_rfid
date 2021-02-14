@@ -8,7 +8,11 @@ class Pending extends Component {
         this.state = { pendingList : [] };
 
         this.updateList();
-        setInterval(() => this.updateList(), 10000);
+        this.pollingId = setInterval(() => this.updateList(), 10000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.pollingId);
     }
 
     updateList() {
