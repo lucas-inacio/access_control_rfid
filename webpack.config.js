@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: "./src/index.js",
@@ -10,11 +11,15 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
-        options: { presets: ["@babel/env"] }
+        options: { presets: ["@babel/env", "@babel/react"] }
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+          "postcss-loader"
+        ]
       }
     ]
   },
@@ -22,7 +27,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "rfid_uart_esp01/data/dist/"),
     publicPath: "/dist/",
-    filename: "bundle.js"
+    filename: "[name].bundle.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
@@ -30,5 +35,10 @@ module.exports = {
     publicPath: "http://localhost:3000/dist/",
     hotOnly: true
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "[name].bundle.css"
+    })
+  ]
 };
