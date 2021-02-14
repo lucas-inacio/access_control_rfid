@@ -9,12 +9,14 @@ using namespace TagManager;
 const char* ssid     = "SSID";
 const char* password = "PASS";
 ESP8266WebServer server(80);
+const unsigned LED_PIN = 16;
 
 unsigned long antes = 0;
-MFRC522_UART mfrc522(2);
+MFRC522_UART mfrc522(Serial, 2);
 MFRC522 rfid(&mfrc522);
 
 void setup() {
+  pinMode(LED_PIN, OUTPUT);
   initTagManager();
   
   // Connect to Wi-Fi network with SSID and password
@@ -54,8 +56,9 @@ void loop(){
       if (rfid.PICC_ReadCardSerial()) {
         bytesToHexString(rfid.uid.uidByte, rfid.uid.size, tagCode);
         if (isTagAllowed(tagCode)) {
-          
+          digitalWrite(LED_PIN, HIGH);
         } else {
+          digitalWrite(LED_PIN, LOW);
           addPending(tagCode);
         }
       }
